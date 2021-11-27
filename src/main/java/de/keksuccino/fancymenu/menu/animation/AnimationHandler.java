@@ -326,7 +326,6 @@ public class AnimationHandler {
 					try {
 						if ((in != null) && (an != null)) {
 							AdvancedAnimation ani = new AdvancedAnimation(in, an, introAudio, mainAudio, replayIntro);
-							//TODO übernehmen
 							ani.propertiesPath = a.getPath();
 							registerAnimation(ani, name, Type.EXTERNAL);
 							if (isNewFormat) {
@@ -335,7 +334,6 @@ public class AnimationHandler {
 							System.out.println("[FM AnimationHandler] Custom animation found and registered: " + name + "");
 						} else if (an != null) {
 							AdvancedAnimation ani = new AdvancedAnimation(null, an, introAudio, mainAudio, false);
-							//TODO übernehmen
 							ani.propertiesPath = a.getPath();
 							registerAnimation(ani, name, Type.EXTERNAL);
 							if (isNewFormat) {

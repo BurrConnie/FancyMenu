@@ -23,7 +23,6 @@ public class ExternalTextureSlideshowRenderer extends GuiComponent {
 	protected List<ExternalTextureResourceLocation> images = new ArrayList<ExternalTextureResourceLocation>();
 	protected ExternalTextureResourceLocation overlay_texture;
 	protected String name = null;
-	//TODO übernehmen (public)
 	public String dir;
 	protected boolean prepared = false;
 	protected double imageDuration = 10.0D;

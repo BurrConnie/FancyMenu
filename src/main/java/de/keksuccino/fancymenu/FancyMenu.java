@@ -2,6 +2,8 @@ package de.keksuccino.fancymenu;
 
 import java.io.File;
 
+import de.keksuccino.fancymenu.commands.OpenGuiScreenCommand;
+import de.keksuccino.fancymenu.mainwindow.MainWindowHandler;
 import de.keksuccino.fancymenu.menu.fancy.customlocals.CustomLocalsHandler;
 import de.keksuccino.fancymenu.menu.fancy.helper.SetupSharingEngine;
 import de.keksuccino.fancymenu.menu.fancy.item.visibilityrequirements.VisibilityRequirementHandler;
@@ -24,6 +26,9 @@ import de.keksuccino.konkrete.config.Config;
 import de.keksuccino.konkrete.config.exceptions.InvalidValueException;
 import de.keksuccino.konkrete.localization.Locals;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.logging.log4j.LogManager;
@@ -33,8 +38,7 @@ import org.apache.logging.log4j.Logger;
 public class FancyMenu {
 
 	//TODO übernehmen
-	public static final String VERSION = "2.3.7";
-	//TODO übernehmen
+	public static final String VERSION = "2.4.0";
 	public static final String MOD_LOADER = "forge";
 
 	public static final Logger LOGGER = LogManager.getLogger();
@@ -49,7 +53,7 @@ public class FancyMenu {
 	private static File slideshowPath = new File("config/fancymenu/slideshows");
 
 	private static boolean optifineLoaded = false;
-	
+
 	public FancyMenu() {
 		try {
 
@@ -91,9 +95,18 @@ public class FancyMenu {
 
 	        	VanillaButtonDescriptionHandler.init();
 
+				//TODO übernehmen
+				MainWindowHandler.handleForceFullscreen();
+
 	        	Konkrete.addPostLoadingEvent("fancymenu", this::onClientSetup);
 
+				//TODO übernehmen
+				MinecraftForge.EVENT_BUS.register(this);
+
 //				MinecraftForge.EVENT_BUS.register(new Test());
+
+//				ButtonActionRegistry.registerButtonAction(new ExampleButtonActionContainerWithoutValue());
+//				ButtonActionRegistry.registerButtonAction(new ExampleButtonActionContainerWithValue());
 	        	
 	    	} else {
 	    		System.out.println("## WARNING ## 'FancyMenu' is a client mod and has no effect when loaded on a server!");
@@ -103,13 +116,20 @@ public class FancyMenu {
 			e.printStackTrace();
 		}
 	}
+
+	//TODO übernehmen
+	@SubscribeEvent
+	public void onRegisterCommands(RegisterCommandsEvent e) {
+
+		OpenGuiScreenCommand.register(e.getDispatcher());
+
+	}
 	
 	private void onClientSetup() {
 		try {
 
 			initLocals();
 
-			//TODO übernehmen
 			SetupSharingEngine.init();
 
 			CustomLocalsHandler.loadLocalizations();
@@ -158,6 +178,8 @@ public class FancyMenu {
     		config.registerValue("stopworldmusicwhencustomizable", false, "general", "Stop vanilla world music when in a customizable menu.");
     		config.registerValue("defaultguiscale", -1, "general", "Sets the default GUI scale on first launch. Useful for modpacks. Cache data is saved in '/mods/fancymenu/'.");
     		config.registerValue("showdebugwarnings", true, "general");
+			//TODO übernehmen
+			config.registerValue("forcefullscreen", false, "general");
     		
     		config.registerValue("showcustomizationbuttons", true, "customization");
 			config.registerValue("advancedmode", false, "customization");

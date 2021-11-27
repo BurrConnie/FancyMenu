@@ -276,7 +276,6 @@ public class CustomizationHelperUI extends UIBase {
 			bar.addElement(currentTab, "fm.ui.tab.current", ElementAlignment.LEFT, false);
 			/** CURRENT MENU TAB END **/
 
-			//TODO übernehmen
 			/** SETUP TAB START **/
 			FMContextMenu setupMenu = new FMContextMenu();
 			setupMenu.setAutoclose(true);

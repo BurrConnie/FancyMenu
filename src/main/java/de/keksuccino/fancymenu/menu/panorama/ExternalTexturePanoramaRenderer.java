@@ -25,7 +25,6 @@ public class ExternalTexturePanoramaRenderer extends GuiComponent {
 	private ExternalTextureResourceLocation overlay_texture;
 	private float time;
 	private String name = null;
-	//TODO übernehmen (public)
 	public String dir;
 	private boolean prepared = false;
 	private List<ExternalTextureResourceLocation> pano = new ArrayList<ExternalTextureResourceLocation>();

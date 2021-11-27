@@ -1,4 +1,3 @@
-//TODO übernehmen
 package de.keksuccino.fancymenu.menu.fancy.helper;
 
 import com.google.common.io.Files;
@@ -7,6 +6,7 @@ import de.keksuccino.fancymenu.FancyMenu;
 import de.keksuccino.fancymenu.menu.animation.AdvancedAnimation;
 import de.keksuccino.fancymenu.menu.animation.AnimationHandler;
 import de.keksuccino.fancymenu.menu.animation.ResourcePackAnimationRenderer;
+import de.keksuccino.fancymenu.menu.fancy.MenuCustomization;
 import de.keksuccino.fancymenu.menu.fancy.MenuCustomizationProperties;
 import de.keksuccino.fancymenu.menu.fancy.helper.ui.popup.FMNotificationPopup;
 import de.keksuccino.fancymenu.menu.fancy.helper.ui.popup.FMPopup;
@@ -27,7 +27,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
 import org.apache.commons.io.FileUtils;
-import org.lwjgl.system.CallbackI;
 
 import java.awt.*;
 import java.io.File;
@@ -58,6 +57,11 @@ public class SetupSharingEngine {
             if (MENU_IDENTIFIERS_DATABASE_FILE.isFile()) {
                 menuIdentifierDatabase = new MenuIdentifierDatabase(MENU_IDENTIFIERS_DATABASE_FILE);
             }
+
+            //TODO übernehmen
+            MenuCustomizationProperties.loadProperties();
+            MenuCustomization.updateCustomizeableMenuCache();
+            //----------------
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -393,15 +397,32 @@ public class SetupSharingEngine {
                                     exportedAnimations.add(m.name);
                                 }
                             }
+                            //TODO übernehmen (ganzen block)
                             if (m.type == AnimationType.PACK) {
                                 File propsPath = new File(m.propertiesPath);
                                 File resPath = new File(m.resourcesPath);
+                                File packMetaPath = null;
+                                try {
+                                    packMetaPath = resPath.getAbsoluteFile().getParentFile();
+                                    if (packMetaPath != null) {
+                                        packMetaPath = packMetaPath.getParentFile();
+                                    }
+                                    if (packMetaPath != null) {
+                                        packMetaPath = new File(packMetaPath.getPath() + "/pack.mcmeta");
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                                 if (propsPath.isDirectory()) {
                                     if (resPath.isDirectory()) {
                                         File resTarget = new File(exportToTempSetup.getAbsolutePath() + "/" + getShortPath(resPath.getPath()));
                                         resTarget.mkdirs();
                                         FileUtils.copyDirectory(resPath, resTarget);
-                                        exportedAnimations.add(m.name);
+                                        if ((packMetaPath != null) && packMetaPath.isFile()) {
+                                            File packMetaTarget = new File(exportToTempSetup.getAbsolutePath() + "/" + getShortPath(packMetaPath.getPath()));
+                                            FileUtils.copyFile(packMetaPath, packMetaTarget);
+                                            exportedAnimations.add(m.name);
+                                        }
                                     }
                                 }
                             }
@@ -750,6 +771,11 @@ public class SetupSharingEngine {
             e.printStackTrace();
         }
         return null;
+    }
+
+    //TODO übernehmen
+    public static MenuIdentifierDatabase getIdentifierDatabase() {
+        return menuIdentifierDatabase;
     }
 
     public static class AdvancedAnimationMeta {
